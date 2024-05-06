@@ -1,23 +1,34 @@
 import numpy as np
 
+
 def board_map(board): #used in board visualisation
-        symbol_map = {0: " ", 1: "o", 2: "x"}
+        symbol_map = {0: " ", 1: "x", 2: "o"}
         return [symbol_map[value] for value in board]
+
 
 class Action:
     def __init__(self, board:int, cell: int):
         self.board = board
         self.cell = cell
 
-class State:
-    board = np.zeros((9, 9))
-    player = 2
+    def __repr__(self):
+        return f'Board: {self.board}, cell: {self.cell}'
 
-    def player(self):
+    def __eq__(self, other):
+        return (self.board == other.board) and (self.cell == other.cell)
+        
+        
+
+class State:
+    board = np.zeros((9, 9), dtype=int)
+    turn_player = 1
+
+    def player(self) -> int:
         """
         Returns which player's turn it is
         """
-        pass
+        return self.turn_player
+
 
     def actions(self) -> list[Action]:
         """
@@ -38,36 +49,83 @@ class State:
         """
         Returns the State resulting from applying the action
         """
-        new_State = State()
-        board = a.board
-        cell = a.cell
-        player = self.player
-        new_State.board[int(board)][int(cell)] = float(player)
-        return new_State
+        action_board = a.board
+        action_cell = a.cell
+        
+        if self.board[action_board][action_cell] != 0:
+            raise ValueError('Illegal action. Only actions on empty cells are allowed.')
 
-    def utility(self):
+        new_state = State()
+        player = self.player()
+        
+        new_state.board = self.board.copy()
+        new_state.board[action_board][action_cell] = player
+
+        if player == 1:
+            new_state.turn_player = 2
+        else:
+            new_state.turn_player = 1
+
+        return new_state
+
+
+    def utility(self) -> None | float:
         """
         Returns the utility of this State
         """
         if not self.terminal_test():
             return None
         
-        #return 1 
-            
-        pass
+        winner = self.winner()
+        if winner is None:
+            #draw
+            return 1/2
+        if winner == 1:
+            #x
+            return 1
+        else:
+            #o
+            return 0
+
 
     def terminal_test(self) -> bool:
         """
         Returns whether this is a terminal state
         """
 
-        # are there any empty spots left?
+        if 0 not in self.board.flatten():
+            #no empty spots left
+            return True
 
-        # is there a winner?
+        if self.winner() is not None:
+            return True
+        
+        return False
 
-        pass
 
-    def __str__(self):
+    def winner(self) -> None | int:
+        
+        def winner_of_board(b: np.ndarray) -> None | int:
+            for player in [1,2]:
+                if ((b[0]==b[1]==b[2]==player) or (b[3]==b[4]==b[5]==player) or (b[6]==b[7]==b[8]==player) or
+                    (b[0]==b[3]==b[6]==player) or (b[1]==b[4]==b[7]==player) or (b[2]==b[5]==b[8]==player) or 
+                    (b[0]==b[4]==b[8]==player) or (b[2]==b[4]==b[6]==player)):
+                    return player
+            return None
+
+        big_board = np.zeros(9, dtype=int)
+
+        for (index, small_board) in enumerate(self.board):
+            winner = winner_of_board(small_board)
+            if winner is None:
+                big_board[index] = 0
+            else:
+                big_board[index] = winner
+
+        return winner_of_board(big_board)
+
+
+    def __repr__(self):
         return """
                 {a[0]}{a[1]}{a[2]}|{b[0]}{b[1]}{b[2]}|{c[0]}{c[1]}{c[2]}
                 {a[3]}{a[4]}{a[5]}|{b[3]}{b[4]}{b[5]}|{c[3]}{c[4]}{c[5]}
@@ -84,17 +142,4 @@ class State:
                 """.format(a=board_map(self.board[0]), b=board_map(self.board[1]), c=board_map(self.board[2]), 
                             d=board_map(self.board[3]),e=board_map(self.board[4]), f=board_map(self.board[5]), 
                             g=board_map(self.board[6]), h=board_map(self.board[7]), i=board_map(self.board[8]))
-def agent(s):
-    possible_actions = s.actions()
-    return possible_moves[0]
 
-
-def main():
-    s = State()
-
-    for x in s.actions():
-        b = s.result(x)
-        print(b)
-
-if __name__ == "__main__":
-    main()
