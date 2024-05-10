@@ -1,11 +1,12 @@
 import tictactoe as ttt
 from agents.random_agent import random_agent
 from agents.human import human
+from agents.agent1 import heuristic
 
 def main():
 
     #player = [random_agent, random_agent]
-    player = [human, random_agent]
+    player = [heuristic, human]
 
     state = ttt.State()
 

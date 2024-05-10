@@ -69,23 +69,28 @@ class State:
         return new_state
 
 
-    def utility(self) -> None | float:
+    def utility(self, player:int=1) -> None | float:
         """
         Returns the utility of this State
         """
-        if not self.terminal_test():
-            return None
-        
-        winner = self.winner()
-        if winner is None:
-            #draw
-            return 1/2
-        if winner == 1:
-            #x
-            return 1
+        def f():
+            if not self.terminal_test():
+                return None
+            
+            winner = self.winner()
+            if winner is None:
+                #draw
+                return 1/2
+            if winner == 1:
+                #x
+                return 1
+            else:
+                #o
+                return 0
+        if player == 1:
+            return f()
         else:
-            #o
-            return 0
+            return 1 - f()
 
 
     def terminal_test(self) -> bool:
