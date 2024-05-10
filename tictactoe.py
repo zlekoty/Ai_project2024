@@ -49,6 +49,7 @@ class State:
         """
         Returns the State resulting from applying the action
         """
+        assert(not a is None)
         action_board = a.board
         action_cell = a.cell
         
@@ -73,10 +74,11 @@ class State:
         """
         Returns the utility of this State
         """
+        if not self.terminal_test():
+            return None
+
         def f():
-            if not self.terminal_test():
-                return None
-            
+                        
             winner = self.winner()
             if winner is None:
                 #draw

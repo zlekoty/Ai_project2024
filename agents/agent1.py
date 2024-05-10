@@ -31,16 +31,19 @@ def heuristic(s: ttt.State):
     
     def heuristic_alpha_beta_search(state: ttt.State) -> ttt.Action:
         player = state.player()
-        value, move = max_value(state, player, -math.inf, math.inf, 0)
+        #value, move = max_value(state, player, -math.inf, math.inf, 0)
+        value, move = max_value(state, player, -100, 100, 0)
         return move
     
     def max_value(state: ttt.State, player, alpha, beta, depth: int):
         if is_cutoff(state, depth):
             return (evaluation(state, player), None)
-        v = -math.inf
+        #v = -math.inf
+        v = -100
         
         for action in state.actions():
-            v2, a2 = min_value(state.result(action), player, alpha, beta, depth + 1)
+            print(action)
+            v2, _ = min_value(state.result(action), player, alpha, beta, depth + 1)
             if v2 > v:
                 v, move = v2,action
                 alpha = max(alpha, v)
@@ -52,9 +55,11 @@ def heuristic(s: ttt.State):
     def min_value(state: ttt.State, player, alpha, beta, depth: int):
         if is_cutoff(state, depth):
             return (evaluation(state, player), None)
-        v = math.inf
+        #v = math.inf
+        v = 100
         for action in state.actions():
-            v2, a2 = max_value(state, state.result(action), alpha, beta, depth + 1)
+            print(action)
+            v2, _ = max_value(state, state.result(action), alpha, beta, depth + 1)
             if v2 < v:
                 v, move = v2, action
                 beta = min(beta, v)
@@ -65,4 +70,4 @@ def heuristic(s: ttt.State):
     def is_cutoff(state, depth):
         return depth < max_depth or state.terminal_test()
     
-    heuristic_alpha_beta_search(s)
+    return heuristic_alpha_beta_search(s)
