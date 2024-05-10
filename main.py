@@ -6,7 +6,8 @@ from agents.agent1 import heuristic
 def main():
 
     #player = [random_agent, random_agent]
-    player = [heuristic, human]
+    #player = [heuristic, random_agent]
+    player = [random_agent, heuristic]
 
     state = ttt.State()
 
