@@ -1,5 +1,6 @@
 import math
 import random
+import os
 import tictactoe as ttt
 
 def heuristic(s: ttt.State) -> ttt.Action:
@@ -7,7 +8,7 @@ def heuristic(s: ttt.State) -> ttt.Action:
         Returns an action found using heuristic search with alpha beta pruning.
     """
 
-    max_depth = 2
+    max_depth = int(os.getenv('DEPTH', 2))
     #do we have to evaluate potential states (after performing actions) and choose the best???
     
     def feature1(s):
