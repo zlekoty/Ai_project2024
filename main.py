@@ -18,7 +18,8 @@ def match(agent1, agent2):
     return state.utility()
 
 def tournament(agent1, agent2, rounds: int):
-    score = 0.
+    score = 0
+
     with Pool() as pool:
         result: list[AsyncResult] = []
         for _ in range(rounds):
@@ -29,13 +30,12 @@ def tournament(agent1, agent2, rounds: int):
 
 
 def main():
-
-    #player = [random_agent, random_agent]
+    player = [human, heuristic]
     #player = [heuristic, random_agent]
-    player = [random_agent, heuristic]
+    #player = [random_agent, heuristic]
 
-    tournament(heuristic, random_agent, 100)
-    exit()
+    #tournament(player[0], player[1], 100)
+    #exit()
     state = ttt.State()
 
     turn = 0

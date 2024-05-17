@@ -18,21 +18,35 @@ def heuristic(s: ttt.State) -> ttt.Action:
     def feature2(s):
         #ex check if opponent can have 3 in row
         pass
+    
+    def feature_won_subgames(s: ttt.State, player: int):
+        count = 0
+        for board in range(9):
+            if s.winner_of_board_index(board) == player:
+                count = count + 1
+        return float(count) / 9
 
     #..........
 
     def evaluation(s: ttt.State, player) -> float:
         if s.terminal_test():
+            print(f"evaluation: return utility: {s.utility(player)}, from POV of player {player}")
             return s.utility(player)
         
-        r = random.random()
+        
+        if player == 1:
+            opponent = 2
+        else:
+            opponent = 1
 
-        return r
-
+        eval = feature_won_subgames(s, player) + 0.00001
+        print(f"evaluation: return evaluation: {eval}, from POV player {player}")
+        return eval
+        #return random.random()
     
     def heuristic_alpha_beta_search(state: ttt.State) -> ttt.Action:
         player = state.player()
-        value, move = max_value(state, player, -math.inf, math.inf, 0)
+        _, move = max_value(state, player, -math.inf, math.inf, 0)
         return move
     
     def max_value(state: ttt.State, player, alpha, beta, depth: int) -> tuple[float, ttt.State | None]:
@@ -55,7 +69,7 @@ def heuristic(s: ttt.State) -> ttt.Action:
             return (evaluation(state, player), None)
         v = math.inf
         for action in state.actions():
-            v2, _ = max_value(state, state.result(action), alpha, beta, depth + 1)
+            v2, _ = max_value(state.result(action), player, alpha, beta, depth + 1)
             if v2 < v:
                 v, move = v2, action
                 beta = min(beta, v)

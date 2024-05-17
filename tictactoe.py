@@ -38,9 +38,10 @@ class State:
         actions = []
 
         for b in range(len(self.board)):
-            for cell in range(len(self.board[0])):
-                if self.board[b][cell] == 0:
-                    actions.append(Action(b, cell))
+            if self.winner_of_board_index(b) is None:
+                for cell in range(len(self.board[0])):
+                    if self.board[b][cell] == 0:
+                        actions.append(Action(b, cell))
 
         return actions
 
@@ -110,26 +111,39 @@ class State:
         return False
 
 
-    def winner(self) -> None | int:
-        
-        def winner_of_board(b: np.ndarray) -> None | int:
-            for player in [1,2]:
-                if ((b[0]==b[1]==b[2]==player) or (b[3]==b[4]==b[5]==player) or (b[6]==b[7]==b[8]==player) or
-                    (b[0]==b[3]==b[6]==player) or (b[1]==b[4]==b[7]==player) or (b[2]==b[5]==b[8]==player) or 
-                    (b[0]==b[4]==b[8]==player) or (b[2]==b[4]==b[6]==player)):
-                    return player
-            return None
+    def winner_of_board_index(self, board_index: int) -> None | int:
+        """
+            Returns the winner (if any) of the subgame `board_index`, 1 for X, 2 for O.
+        """
+        b = self.board[board_index]
+        return self._winner_of_board(b)
+    
+    def _winner_of_board(self, b: np.ndarray) -> None | int:
+        """
+            Returns the winner (if any) of the given 3x3 tic-tac-toe game 1 for X, 2 for O.
+        """
 
+        for player in [1,2]:
+            if ((b[0]==b[1]==b[2]==player) or (b[3]==b[4]==b[5]==player) or (b[6]==b[7]==b[8]==player) or
+                (b[0]==b[3]==b[6]==player) or (b[1]==b[4]==b[7]==player) or (b[2]==b[5]==b[8]==player) or 
+                (b[0]==b[4]==b[8]==player) or (b[2]==b[4]==b[6]==player)):
+                return player
+        return None
+
+    def winner(self) -> None | int:
+        """
+            Returns the winner (if any) of the game 1 for X, 2 for O.
+        """
         big_board = np.zeros(9, dtype=int)
 
         for (index, small_board) in enumerate(self.board):
-            winner = winner_of_board(small_board)
+            winner = self._winner_of_board(small_board)
             if winner is None:
                 big_board[index] = 0
             else:
                 big_board[index] = winner
 
-        return winner_of_board(big_board)
+        return self._winner_of_board(big_board)
 
 
     def __repr__(self):
