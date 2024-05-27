@@ -79,21 +79,21 @@ class State:
             return None
 
         def f():
-                        
+          
             winner = self.winner()
             if winner is None:
                 #draw
-                return 1/2
+                return 0
             if winner == 1:
                 #x
                 return 1
             else:
                 #o
-                return 0
+                return -1
         if player == 1:
             return f()
         else:
-            return 1 - f()
+            return -f()
 
 
     def terminal_test(self) -> bool:
@@ -129,11 +129,8 @@ class State:
                 (b[0]==b[4]==b[8]==player) or (b[2]==b[4]==b[6]==player)):
                 return player
         return None
-
-    def winner(self) -> None | int:
-        """
-            Returns the winner (if any) of the game 1 for X, 2 for O.
-        """
+    
+    def big_board(self):
         big_board = np.zeros(9, dtype=int)
 
         for (index, small_board) in enumerate(self.board):
@@ -142,7 +139,14 @@ class State:
                 big_board[index] = 0
             else:
                 big_board[index] = winner
+        return big_board
+    
+    def winner(self) -> None | int:
+        """
+            Returns the winner (if any) of the game 1 for X, 2 for O.
+        """
 
+        big_board = self.big_board()
         return self._winner_of_board(big_board)
 
 

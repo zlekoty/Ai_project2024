@@ -30,9 +30,9 @@ def tournament(agent1, agent2, rounds: int):
 
 
 def main():
-    player = [human, heuristic]
+    #player = [random, heuristic]
     #player = [heuristic, random_agent]
-    #player = [random_agent, heuristic]
+    player = [random_agent, heuristic]
 
     #tournament(player[0], player[1], 100)
     #exit()
