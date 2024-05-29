@@ -86,10 +86,10 @@ class State:
                 return 0
             if winner == 1:
                 #x
-                return 1
+                return int(1e6)
             else:
                 #o
-                return -1
+                return int(-1e6)
         if player == 1:
             return f()
         else:
@@ -100,10 +100,15 @@ class State:
         """
         Returns whether this is a terminal state
         """
-
+        
+        """
         if 0 not in self.board.flatten():
             #no empty spots left
             return True
+        """
+        if len(self.actions()) == 0:
+            return True
+        
 
         if self.winner() is not None:
             return True
