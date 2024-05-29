@@ -56,7 +56,7 @@ def heuristic(s: ttt.State) -> ttt.Action:
 
     def evaluation(s: ttt.State, player) -> float:
         if s.terminal_test():
-            print(f"evaluation: return utility: {s.utility(player)}, from POV of player {player}")
+            #print(f"evaluation: return utility: {s.utility(player)}, from POV of player {player}")
             return s.utility(player)
         
         
