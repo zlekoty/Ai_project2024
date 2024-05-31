@@ -40,15 +40,17 @@ def tournament(agent1, agent2, rounds: int):
 
 
 def main():
-    player = [heuristic_2, human]
-    #player = [heuristic_1, random_agent]
-    
-    print(f"tournament: {player[0]} vs {player[1]}")
-    #tournament(player[0], player[1], int(1e1))
+    #Change this to set the agents
+    #Possibilities: heuristic_1, heuristic_2, heuristic_random, random_agent, human
+    player = [heuristic_1, heuristic_2]
 
-    #print(f"tournament: {player[1]} vs {player[0]}")
-    #tournament(player[1], player[0], int(1e2))
-    #exit()
+    print(f"tournament: {player[0]} vs {player[1]}")
+    tournament(player[0], player[1], int(1e2))
+
+    print(f"tournament: {player[1]} vs {player[0]}")
+    tournament(player[1], player[0], int(1e2))
+    exit()
+    #the code below runs a single game between the chosen agents and prints the final board.
     state = ttt.State()
 
     turn = 0
